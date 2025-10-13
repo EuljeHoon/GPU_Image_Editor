@@ -195,32 +195,6 @@ lspci | grep VGA
 glxgears
 ```
 
-## 🛡️ Troubleshooting
-
-### Common Issues
-
-#### "OpenGL not found" Error
-- **Solution**: Install OpenGL development libraries
-- **Linux**: `sudo apt install libgl1-mesa-dev`
-- **macOS**: Update graphics drivers
-- **Windows**: Update GPU drivers
-
-#### "GLFW not found" Error
-- **Solution**: Install GLFW development libraries
-- **Linux**: `sudo apt install libglfw3-dev`
-- **macOS**: `brew install glfw`
-- **Windows**: Download from GLFW website
-
-#### Poor Performance
-- **Check GPU**: Ensure dedicated graphics card is being used
-- **Update Drivers**: Install latest graphics drivers
-- **Close Background Apps**: Free up GPU resources
-
-#### Build Errors
-- **Compiler Version**: Ensure C++11 support
-- **Library Paths**: Verify include and library directories
-- **Dependencies**: Check all required libraries are installed
-
 ## 📊 System Compatibility
 
 ### Tested Configurations
@@ -232,26 +206,6 @@ glxgears
 - **Minimum**: OpenGL 3.3 support
 - **Recommended**: OpenGL 4.0+ with dedicated VRAM
 - **Optimal**: Modern GPU with 2GB+ VRAM
-
-## 🔮 Future Enhancements
-
-### Planned Features
-- **Advanced Filters**: Blur, sharpen, edge detection
-- **Layer System**: Multiple image layers
-- **File I/O**: Save/load edited images
-- **Undo/Redo**: Operation history
-- **Brush Tools**: Different brush sizes and shapes
-- **Color Picker**: Custom color selection
-
-### Performance Improvements
-- **Compute Shaders**: GPU-accelerated image processing
-- **Multi-threading**: CPU-GPU parallel processing
-- **Memory Optimization**: Reduced GPU memory usage
-- **Batch Operations**: Multiple operations in single GPU call
-
-## 📄 License
-
-This project is developed as a personal portfolio piece demonstrating GPU programming and real-time graphics capabilities.
 
 ## 🤝 Contributing
 
