@@ -30,7 +30,9 @@ ShaderProgram::ShaderProgram() {
     "       FragColor = clamp(color*vec4(2.0,2.0,2.0,1.0), 0, 1.0); \n"
     "   } \n"
     "   else { \n"
-    "       FragColor = texture(tex, interpCoord);\n"
+    "       vec4 c = texture(tex, interpCoord); \n"
+    "       float gray = 0.299*c.r + 0.587*c.g + 0.114*c.b; \n"
+    "       FragColor = vec4(gray, gray, gray, 1.0); \n"
     "   } \n"
     "}\n\0";
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -110,7 +112,9 @@ ShaderProgram& ShaderProgram::operator=(const ShaderProgram& other) {
     "       FragColor = clamp(color*vec4(2.0,2.0,2.0,1.0), 0, 1.0); \n"
     "   } \n"
     "   else { \n"
-    "       FragColor = texture(tex, interpCoord);\n"
+    "       vec4 c = texture(tex, interpCoord); \n"
+    "       float gray = 0.299*c.r + 0.587*c.g + 0.114*c.b; \n"
+    "       FragColor = vec4(gray, gray, gray, 1.0); \n"
     "   } \n"
     "}\n\0";
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
