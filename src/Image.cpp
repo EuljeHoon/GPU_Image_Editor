@@ -1,5 +1,6 @@
 #include "Image.h"
 #include <iostream>
+#include <cmath>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -118,6 +119,17 @@ void Image::fillPattern() {
     for(int y = 0; y < height; y++) {
         for(int x = 0; x < width; x++) {
             unsigned char value = (unsigned char) (255.0 * x / width);
+            drawPixel(x, y, value, value, value, 255);
+        }
+    }
+}
+
+void Image::fillAnimated(float t) {
+    if (!img) return;
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            float v = 0.5f + 0.5f * sinf((x * 0.05f) + t);
+            unsigned char value = (unsigned char) (255.0f * v);
             drawPixel(x, y, value, value, value, 255);
         }
     }

@@ -47,6 +47,10 @@ void Application::runApplication() {
         // -------------------------------------
         // Copy background image data to the texture
         // -------------------------------------
+        static float t = 0.0f;
+        t += 0.05f;
+        backgroundImage->fillAnimated(t);
+        
         float width = backgroundImage->getWidth();
         float height = backgroundImage->getHeight();
         backgroundTexture->copyData(backgroundImage->getData(), width, height, 4);

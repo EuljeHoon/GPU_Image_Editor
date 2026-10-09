@@ -16,6 +16,7 @@ namespace csci3081 {
             bool load_image(const std::string& fileName);
             
             void fillPattern();
+            void fillAnimated(float t);
             void drawPixel(int x, int y, unsigned char red, unsigned char green, unsigned char blue, unsigned char a = 255);
             void reset();
 
