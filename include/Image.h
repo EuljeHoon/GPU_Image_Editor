@@ -14,7 +14,8 @@ namespace csci3081 {
             Image& operator=(const Image& other);
 
             bool load_image(const std::string& fileName);
-
+            
+            void fillPattern();
             void drawPixel(int x, int y, unsigned char red, unsigned char green, unsigned char blue, unsigned char a = 255);
             void reset();
 

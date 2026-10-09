@@ -90,6 +90,7 @@ void Application::runApplication() {
 }
 void Application::initialImage() {
     backgroundImage = new Image("img_small.jpeg");
+    backgroundImage->fillPattern();
     buttonImage = new Image("reset.png");
     colorButtonImage = new Image("Color_Button.png");
 }

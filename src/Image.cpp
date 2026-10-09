@@ -112,3 +112,13 @@ void Image::drawPixel(int x, int y, unsigned char red, unsigned char green, unsi
     img[index + 2] = blue;
     img[index + 3] = a;
 }
+
+void Image::fillPattern() {
+    if (!img) return;
+    for(int y = 0; y < height; y++) {
+        for(int x = 0; x < width; x++) {
+            unsigned char value = (unsigned char) (255.0 * x / width);
+            drawPixel(x, y, value, value, value, 255);
+        }
+    }
+}
