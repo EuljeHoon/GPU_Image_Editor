@@ -1,5 +1,5 @@
 build/ImageEditor: build/main.o build/glad.o build/Window.o build/Image.o build/Texture.o build/ShaderProgram.o build/TexturedRectangle.o build/Button.o build/ColorButton.o build/Application.o
-	g++ build/main.o build/glad.o build/Window.o build/Image.o build/Texture.o build/ShaderProgram.o build/TexturedRectangle.o build/Button.o build/ColorButton.o build/Application.o -o build/ImageEditor /usr/lib/x86_64-linux-gnu/libglfw.so.3.3
+	g++ build/main.o build/glad.o build/Window.o build/Image.o build/Texture.o build/ShaderProgram.o build/TexturedRectangle.o build/Button.o build/ColorButton.o build/Application.o -o build/ImageEditor -lglfw -lGL -ldl
 
 build/main.o: src/main.cpp
 	mkdir -p build
