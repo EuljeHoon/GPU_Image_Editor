@@ -32,7 +32,10 @@ ShaderProgram::ShaderProgram() {
     "   else { \n"
     "       vec4 c = texture(tex, interpCoord); \n"
     "       float gray = 0.299*c.r + 0.587*c.g + 0.114*c.b; \n"
-    "       FragColor = vec4(gray, gray, gray, 1.0); \n"
+    "       vec3 cold = vec3(0.0, 0.0, 1.0); \n"
+    "       vec3 hot = vec3(1.0, 0.0, 0.0) \n"
+    "       vec3 mapped = mix(cold, hot, gray); \n"
+    "       FragColor = vec4(mapped, 1.0); \n"
     "   } \n"
     "}\n\0";
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -114,7 +117,10 @@ ShaderProgram& ShaderProgram::operator=(const ShaderProgram& other) {
     "   else { \n"
     "       vec4 c = texture(tex, interpCoord); \n"
     "       float gray = 0.299*c.r + 0.587*c.g + 0.114*c.b; \n"
-    "       FragColor = vec4(gray, gray, gray, 1.0); \n"
+    "       vec3 cold = vec3(0.0, 0.0, 1.0); \n"
+    "       vec3 hot = vec3(1.0, 0.0, 0.0) \n"
+    "       vec3 mapped = mix(cold, hot, gray); \n"
+    "       FragColor = vec4(mapped, 1.0); \n"
     "   } \n"
     "}\n\0";
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
