@@ -19,6 +19,7 @@ namespace csci3081 {
             void fillAnimated(float t);
             void waveInit();
             void waveStep();
+            void waveClick(int x, int y);
             void drawPixel(int x, int y, unsigned char red, unsigned char green, unsigned char blue, unsigned char a = 255);
             void reset();
 

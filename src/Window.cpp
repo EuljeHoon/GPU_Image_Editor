@@ -112,6 +112,7 @@ void Window::cursor_position_callback(GLFWwindow* window, double xpos, double yp
         std::cout << x << " " << y << std::endl;
         int imgX = x * app.backgroundImage->getWidth();
         int imgY = y * app.backgroundImage->getHeight();
+        app.backgroundImage->waveClick(imgX, imgY);
         int radius = 2;
         for (int i = imgX-radius; i < imgX+radius+1; i++) {
             for (int j = imgY-radius; j < imgY + radius+1; j++) {

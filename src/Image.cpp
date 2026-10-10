@@ -197,3 +197,9 @@ void Image::waveStep() {
         }
     }
 }
+
+void Image::waveClick(int x, int y) {
+    if (!waveCurr) return;
+    if (x < 0 || y < 0 || x >= width || y >= height) return;
+    waveCurr[y * width + x] = 300.0f;
+}
