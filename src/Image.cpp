@@ -186,7 +186,7 @@ void Image::waveStep() {
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             float h = waveCurr[y * width + x];
-            int v = (int)(128.0f + h);
+            int v = (int)(128.0f + h * 10.0f);
             if (v < 0) {
                 v = 0;
             }
