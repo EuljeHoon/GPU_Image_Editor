@@ -27,6 +27,10 @@ Image::~Image() {
         stbi_image_free(img);
         img = nullptr;
     }
+    delete[] wavePrev;
+    delete[] waveCurr;
+    delete[] waveNext;
+
 }
 
 Image::Image(const Image& other) {
@@ -131,6 +135,65 @@ void Image::fillAnimated(float t) {
             float v = 0.5f + 0.5f * sinf((x * 0.05f) + t);
             unsigned char value = (unsigned char) (255.0f * v);
             drawPixel(x, y, value, value, value, 255);
+        }
+    }
+}
+
+void Image::waveInit() {
+    if (!img) return;
+    int n = width * height;
+
+    wavePrev = new float[n];
+    waveCurr = new float[n];
+    waveNext = new float[n];
+
+    for (int i = 0; i < n; i++) {
+        wavePrev[i] = 0.0f;
+        waveCurr[i] = 0.0f;
+        waveNext[i] = 0.0f;
+    }
+
+    int cx = width / 2;
+    int cy = height / 2;
+    waveCurr[cy * width + cx] = 200.0f;
+}
+
+void Image::waveStep() {
+    if (!waveCurr) return;
+    float c = 0.2f; // Wave Speed
+
+    for (int y = 1; y < height - 1; y++) {
+        for (int x = 1; x < width - 1; x++) {
+            int i = y * width + x;
+            int left = y * width + (x - 1);
+            int right = y * width + (x + 1);
+            int up = (y - 1) * width + x;
+            int down = (y + 1) * width + x;
+
+            waveNext[i] = 2.0f * waveCurr[i] - wavePrev[i]
+                        + c * (waveCurr[left] + waveCurr[right] 
+                            + waveCurr[up] + waveCurr[down] 
+                            - 4.0f * waveCurr[i]);
+            waveNext[i] *= 0.995f;
+        }
+    }
+
+    float* temp = wavePrev;
+    wavePrev = waveCurr;
+    waveCurr = waveNext;
+    waveNext = temp;
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            float h = waveCurr[y * width + x];
+            int v = (int)(128.0f + h);
+            if (v < 0) {
+                v = 0;
+            }
+            if (v > 255) {
+                v = 255;
+            }
+            drawPixel(x, y, v, v, v, 255);
         }
     }
 }

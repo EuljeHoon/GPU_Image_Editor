@@ -17,6 +17,8 @@ namespace csci3081 {
             
             void fillPattern();
             void fillAnimated(float t);
+            void waveInit();
+            void waveStep();
             void drawPixel(int x, int y, unsigned char red, unsigned char green, unsigned char blue, unsigned char a = 255);
             void reset();
 
@@ -30,6 +32,10 @@ namespace csci3081 {
             int height;
             int channels;
             std::string fileName;
+
+            float* wavePrev = nullptr;
+            float* waveCurr = nullptr;
+            float* waveNext = nullptr;
     };
 }
 #endif

@@ -47,9 +47,7 @@ void Application::runApplication() {
         // -------------------------------------
         // Copy background image data to the texture
         // -------------------------------------
-        static float t = 0.0f;
-        t += 0.05f;
-        backgroundImage->fillAnimated(t);
+        backgroundImage->waveStep();
         
         float width = backgroundImage->getWidth();
         float height = backgroundImage->getHeight();
@@ -94,7 +92,7 @@ void Application::runApplication() {
 }
 void Application::initialImage() {
     backgroundImage = new Image("img_small.jpeg");
-    backgroundImage->fillPattern();
+    backgroundImage->waveInit();
     buttonImage = new Image("reset.png");
     colorButtonImage = new Image("Color_Button.png");
 }
