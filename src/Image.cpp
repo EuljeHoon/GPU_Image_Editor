@@ -183,11 +183,13 @@ void Image::waveStep(bool useCPU) {
         for (int x = 0; x < width; x++) {
             float h = waveCurr[y * width + x];
             if (useCPU) {
-                float t = (h * 10.0f) / 255.0f;
-                if (t < 0) t = 0; if (t > 1) t = 1;
-                int r = (int)(0.4f * 255 * t);
-                int g = (int)(0.7f * 255 * t);
-                int b = (int)(1.0f * 255 * t);
+                // CPU가 직접 컬러맵 계산 (셰이더와 똑같은 검정→파랑)
+                float gray = (128.0f + h * 10.0f) / 255.0f;   // GPU의 회색값과 동일하게
+                if (gray < 0) gray = 0;
+                if (gray > 1) gray = 1;
+                int r = (int)(0.4f * 255.0f * gray);
+                int g = (int)(0.7f * 255.0f * gray);
+                int b = (int)(1.0f * 255.0f * gray);
                 drawPixel(x, y, r, g, b, 255);
             }
             else {

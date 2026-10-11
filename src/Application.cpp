@@ -88,6 +88,7 @@ void Application::runApplication() {
         shader->uniform3f("scale", 1.0f, 1.0f, 1.0f);
         shader->uniform3f("offset", 0.0f, 0.0f, 0.0f);
         shader->uniform1i("highlight", false);
+        shader->uniform1i("cpuMode", useCPU);
         texRectangle->draw();
 
         // resetButton->drawButton(*shader, *texRectangle, buttonHighlighted);

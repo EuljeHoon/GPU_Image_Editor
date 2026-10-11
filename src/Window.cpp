@@ -110,20 +110,9 @@ void Window::cursor_position_callback(GLFWwindow* window, double xpos, double yp
     // If we are drawing, edit the background image
     // -------------------------------------
     if (app.draw) {
-        std::cout << x << " " << y << std::endl;
         int imgX = x * app.backgroundImage->getWidth();
         int imgY = y * app.backgroundImage->getHeight();
         app.backgroundImage->waveClick(imgX, imgY);
-        int radius = 2;
-        for (int i = imgX-radius; i < imgX+radius+1; i++) {
-            for (int j = imgY-radius; j < imgY + radius+1; j++) {
-                // Bring the color information from the color button
-                int red = app.colorButton->getRed();
-                int green = app.colorButton->getGreen();
-                int blue = app.colorButton->getBlue();
-                app.backgroundImage->drawPixel(i, j, red, green, blue, 255);
-            }
-        }
     }
 }
 void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
