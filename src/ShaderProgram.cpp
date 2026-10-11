@@ -32,9 +32,9 @@ ShaderProgram::ShaderProgram() {
     "   else { \n"
     "       vec4 c = texture(tex, interpCoord); \n"
     "       float gray = 0.299*c.r + 0.587*c.g + 0.114*c.b; \n"
-    "       vec3 cold = vec3(0.0, 0.0, 1.0); \n"
-    "       vec3 hot = vec3(1.0, 0.0, 0.0); \n"
-    "       vec3 mapped = mix(cold, hot, gray); \n"
+    "       vec3 dark = vec3(0.0, 0.0, 0.0); \n"
+    "       vec3 wave = vec3(0.4, 0.7, 1.0); \n"
+    "       vec3 mapped = mix(dark, wave, gray); \n"
     "       FragColor = vec4(mapped, 1.0); \n"
     "   } \n"
     "}\n\0";

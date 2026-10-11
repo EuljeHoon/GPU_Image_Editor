@@ -58,7 +58,7 @@ void Application::runApplication() {
         // -------------------------------------
         
         // Clear the screen
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // -------------------------------------
@@ -76,8 +76,8 @@ void Application::runApplication() {
         shader->uniform1i("highlight", false);
         texRectangle->draw();
 
-        resetButton->drawButton(*shader, *texRectangle, buttonHighlighted);
-        colorButton->drawButton(*shader, *texRectangle, colorButtonHighlighted);
+        // resetButton->drawButton(*shader, *texRectangle, buttonHighlighted);
+        // colorButton->drawButton(*shader, *texRectangle, colorButtonHighlighted);
 
         // -------------------------------------
         // Show window on the screen
@@ -93,8 +93,8 @@ void Application::runApplication() {
 void Application::initialImage() {
     backgroundImage = new Image("img_small.jpeg");
     backgroundImage->waveInit();
-    buttonImage = new Image("reset.png");
-    colorButtonImage = new Image("Color_Button.png");
+    // buttonImage = new Image("reset.png");
+    // colorButtonImage = new Image("Color_Button.png");
 }
 void Application::initialWindow() {
     float width = backgroundImage->getWidth();

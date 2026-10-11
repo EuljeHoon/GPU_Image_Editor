@@ -160,6 +160,13 @@ void Window::mouse_button_callback(GLFWwindow* window, int button, int action, i
         }
         else {
             app.draw = true;
+            double xpos, ypos;
+            glfwGetCursorPos(window, &xpos, &ypos);
+            float x = xpos / app.windowWidth;
+            float y = ypos / app.windowHeight;
+            int imgX = x * app.backgroundImage->getWidth();
+            int imgY = y * app.backgroundImage->getHeight();
+            app.backgroundImage->waveClick(imgX, imgY);
         }
     }
     if (action == GLFW_RELEASE) {
