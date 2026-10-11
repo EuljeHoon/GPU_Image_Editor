@@ -93,8 +93,8 @@ void Application::runApplication() {
 void Application::initialImage() {
     backgroundImage = new Image("img_small.jpeg");
     backgroundImage->waveInit();
-    // buttonImage = new Image("reset.png");
-    // colorButtonImage = new Image("Color_Button.png");
+    buttonImage = new Image("reset.png");
+    colorButtonImage = new Image("Color_Button.png");
 }
 void Application::initialWindow() {
     float width = backgroundImage->getWidth();
