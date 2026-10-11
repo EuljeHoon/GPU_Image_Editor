@@ -152,10 +152,6 @@ void Image::waveInit() {
         waveCurr[i] = 0.0f;
         waveNext[i] = 0.0f;
     }
-
-    int cx = width / 2;
-    int cy = height / 2;
-    waveCurr[cy * width + cx] = 200.0f;
 }
 
 void Image::waveStep() {
