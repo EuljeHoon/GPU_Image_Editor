@@ -23,6 +23,7 @@ Window::Window(int width, int height) {
         return;
     }
     glfwMakeContextCurrent(window);
+    glfwSwqpInterval(0);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, cursor_position_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);

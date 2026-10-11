@@ -18,6 +18,7 @@ namespace csci3081 {
             bool buttonPressed;
             bool buttonHighlighted;
             bool colorButtonHighlighted;
+            bool useCPU = false;
             Image* backgroundImage;
             Image* buttonImage;
             Image* colorButtonImage;

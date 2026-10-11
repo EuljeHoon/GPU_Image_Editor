@@ -154,7 +154,7 @@ void Image::waveInit() {
     }
 }
 
-void Image::waveStep() {
+void Image::waveStep(bool useCPU) {
     if (!waveCurr) return;
     float c = 0.2f; // Wave Speed
 
@@ -182,14 +182,24 @@ void Image::waveStep() {
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             float h = waveCurr[y * width + x];
-            int v = (int)(128.0f + h * 10.0f);
-            if (v < 0) {
-                v = 0;
+            if (useCPU) {
+                float t = (h * 10.0f) / 255.0f;
+                if (t < 0) t = 0; if (t > 1) t = 1;
+                int r = (int)(0.4f * 255 * t);
+                int g = (int)(0.7f * 255 * t);
+                int b = (int)(1.0f * 255 * t);
+                drawPixel(x, y, r, g, b, 255);
             }
-            if (v > 255) {
-                v = 255;
+            else {
+                int v = (int)(128.0f + h * 10.0f);
+                if (v < 0) {
+                    v = 0;
+                }
+                if (v > 255) {
+                    v = 255;
+                }
+                drawPixel(x, y, v, v, v, 255);
             }
-            drawPixel(x, y, v, v, v, 255);
         }
     }
 }

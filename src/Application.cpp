@@ -35,6 +35,18 @@ void Application::runApplication() {
     // Scrapped from initial main.cpp
     while(!window->windowShouldClose())
     {
+        // --- FPS calculation ---
+        static double lastTime = glfwGetTime();
+        static int frameCount = 0;
+        frameCount++;
+        double now = glfwGetTime();
+        if (now - lastTime >= 1.0) {
+            std::cout << (useCPU ? "[CPU] " : "[GPU] ")
+                      << "FPS: " << frameCount
+                      << "  (" << 1000.0 / frameCount << " ms/frame)" << std::endl;
+            frameCount = 0;
+            lastTime = now;
+        }
         // -------------------------------------
         // Process window input (e.g. mouse movement, clicks, resize, etc...)
         // -------------------------------------
@@ -43,11 +55,13 @@ void Application::runApplication() {
             //Set the window to close
             glfwSetWindowShouldClose(window->newWindow(), true);
         }
+        if(window->getKey(GLFW_KEY_G)) useCPU = false;
+        if(window->getKey(GLFW_KEY_C)) useCPU = true;
 
         // -------------------------------------
         // Copy background image data to the texture
         // -------------------------------------
-        backgroundImage->waveStep();
+        backgroundImage->waveStep(useCPU);
         
         float width = backgroundImage->getWidth();
         float height = backgroundImage->getHeight();
