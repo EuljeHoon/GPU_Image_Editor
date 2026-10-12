@@ -66,7 +66,7 @@ void Application::runApplication() {
         if(window->getKey(GLFW_KEY_SPACE)) {
             clickX = 0.5f;
             clickY = 0.5f;
-            clickStrength = 1.0f;
+            clickStrength = 0.3f;
         }
 
         // --- GPU에서 파동 한 스텝 계산 ---
@@ -278,7 +278,7 @@ void Application::waveStepGPU() {
     glUniform1i(computeLoc("prev"), 1);
 
     glUniform2f(computeLoc("texel"), 1.0f / w, 1.0f / h);  // 1픽셀 UV 크기
-    glUniform1f(computeLoc("c"), 0.2f);
+    glUniform1f(computeLoc("c"), 0.1f);
     glUniform2f(computeLoc("clickPos"), clickX, clickY);
     glUniform1f(computeLoc("clickStrength"), clickStrength);
 
