@@ -62,12 +62,15 @@ void Application::runApplication() {
         if(window->getKey(GLFW_KEY_G)) useCPU = false;
         if(window->getKey(GLFW_KEY_C)) useCPU = true;
 
-        // --- 테스트용: 스페이스 누르면 가운데를 "툭" 치기 ---
-        if(window->getKey(GLFW_KEY_SPACE)) {
+        // --- 테스트용: 스페이스 "누르는 순간" 딱 한 번만 툭 ---
+        static bool spaceWasDown = false;
+        bool spaceDown = window->getKey(GLFW_KEY_SPACE);
+        if (spaceDown && !spaceWasDown) {   // 방금 눌리기 시작한 순간만
             clickX = 0.5f;
             clickY = 0.5f;
             clickStrength = 0.3f;
         }
+        spaceWasDown = spaceDown;
 
         // --- GPU에서 파동 한 스텝 계산 ---
         waveStepGPU();
@@ -221,10 +224,10 @@ void Application::initComputeShader() {
         "   float next = 2.0*center - old + c*lap;\n"
         "   next *= 0.999;\n"
         "\n"
-        "   // 클릭: 그 자리를 고정 높이로 설정 (prev=curr 효과 → 속도 0에서 시작)\n"
+        "   // 클릭: 그 자리에 부드럽게 더하기 (가우시안 모양)\n"
         "   if (clickStrength > 0.0) {\n"
         "       float d = distance(uv, clickPos);\n"
-        "       if (d < 0.03) { next = clickStrength; }\n"
+        "       next += clickStrength * exp(-d*d / 0.0002);\n"
         "   }\n"
         "   FragColor = next;\n"
         "}\0";
