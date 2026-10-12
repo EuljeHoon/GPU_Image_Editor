@@ -62,13 +62,11 @@ void Application::runApplication() {
         if(window->getKey(GLFW_KEY_G)) useCPU = false;
         if(window->getKey(GLFW_KEY_C)) useCPU = true;
 
-        // --- 테스트용: 스페이스 누르면 현재 텍스처 가운데를 "툭" 치기 ---
+        // --- 테스트용: 스페이스 누르면 가운데를 "툭" 치기 ---
         if(window->getKey(GLFW_KEY_SPACE)) {
-            int w = backgroundImage->getWidth();
-            int h = backgroundImage->getHeight();
-            float val = 300.0f;
-            glBindTexture(GL_TEXTURE_2D, waveTex[currIdx]);
-            glTexSubImage2D(GL_TEXTURE_2D, 0, w/2, h/2, 1, 1, GL_RED, GL_FLOAT, &val);
+            clickX = 0.5f;
+            clickY = 0.5f;
+            clickStrength = 1.0f;
         }
 
         // --- GPU에서 파동 한 스텝 계산 ---
@@ -209,6 +207,8 @@ void Application::initComputeShader() {
         "uniform sampler2D prev;\n"
         "uniform vec2 texel;\n"
         "uniform float c;\n"
+        "uniform vec2 clickPos;\n"
+        "uniform float clickStrength;\n"
         "void main(){\n"
         "   float center = texture(curr, uv).r;\n"
         "   float old    = texture(prev, uv).r;\n"
@@ -220,6 +220,12 @@ void Application::initComputeShader() {
         "   float next = 2.0*center - old + c*(left + right + up + down - 4.0*center);\n"
         "\n"
         "   next *= 0.995; // 감쇠\n"
+        "\n"
+        "   // 클릭 위치 근처면 솟게 하기 (툭)\n"
+        "   if (clickStrength > 0.0) {\n"
+        "       float d = distance(uv, clickPos);\n"
+        "       if (d < 0.02) { next += clickStrength; }\n"
+        "   }\n"
         "   FragColor = next;\n"
         "}\0";
 
@@ -273,8 +279,12 @@ void Application::waveStepGPU() {
 
     glUniform2f(computeLoc("texel"), 1.0f / w, 1.0f / h);  // 1픽셀 UV 크기
     glUniform1f(computeLoc("c"), 0.2f);
+    glUniform2f(computeLoc("clickPos"), clickX, clickY);
+    glUniform1f(computeLoc("clickStrength"), clickStrength);
 
     texRectangle->draw();   // 전체 화면 사각형 그림 → 셰이더가 모든 셀 계산
+
+    clickStrength = 0.0f;   // 클릭은 한 프레임만 적용
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, windowWidth, windowHeight);
