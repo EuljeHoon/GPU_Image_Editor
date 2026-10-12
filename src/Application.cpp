@@ -1,4 +1,5 @@
 #include "Application.h"
+#include <glad/glad.h>
 #include <iostream>
 
 using namespace csci3081;
@@ -20,6 +21,8 @@ Application::Application(int width, int height) {
     initialShaderTexture();
     initialButton();
     initialColorButton();
+
+    initFboTest();   // FBO test
 }
 Application::~Application() {
     delete window;
@@ -58,37 +61,27 @@ void Application::runApplication() {
         if(window->getKey(GLFW_KEY_G)) useCPU = false;
         if(window->getKey(GLFW_KEY_C)) useCPU = true;
 
-        // -------------------------------------
-        // Copy background image data to the texture
-        // -------------------------------------
-        backgroundImage->waveStep(useCPU);
-        
-        float width = backgroundImage->getWidth();
-        float height = backgroundImage->getHeight();
-        backgroundTexture->copyData(backgroundImage->getData(), width, height, 4);
+        // --- FBO TEST: Draw Red Background ---
+        renderToFbo();
 
         // -------------------------------------
         // Render Graphics
         // -------------------------------------
-        
+
         // Clear the screen
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // -------------------------------------
-        // Use the shader program defined above
-        // -------------------------------------
         shader->runProgram();
-        
-        // -------------------------------------
-        // Use the texture defined above
-        // -------------------------------------
-        backgroundTexture->bind();
+
+        // --- FBO TEST: Import Red background on the screen ---
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, fboTexture);
         shader->uniform1i("tex", 0);
         shader->uniform3f("scale", 1.0f, 1.0f, 1.0f);
         shader->uniform3f("offset", 0.0f, 0.0f, 0.0f);
         shader->uniform1i("highlight", false);
-        shader->uniform1i("cpuMode", useCPU);
+        shader->uniform1i("cpuMode", true);
         texRectangle->draw();
 
         // resetButton->drawButton(*shader, *texRectangle, buttonHighlighted);
@@ -138,4 +131,51 @@ void Application::initialColorButton() {
     float height = backgroundImage->getHeight();
     float aspect = 1.0f * width / height;
     colorButton = new ColorButton(colorButtonImage, 0.01f, 0.17f, 0.1f, 0.1f * aspect);
+}
+
+// ========================================================================
+// FBO TEST (temporary) — proves we can render into a texture, not the screen
+// ========================================================================
+void Application::initFboTest() {
+    int w = backgroundImage->getWidth();
+    int h = backgroundImage->getHeight();
+
+    // 1) Create empty texture
+    glGenTextures(1, &fboTexture);
+    glBindTexture(GL_TEXTURE_2D, fboTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // 2) Create FBO and assingn the texture above as a target
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                           GL_TEXTURE_2D, fboTexture, 0);
+
+    // 3) Check FBO
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        std::cout << "ERROR: FBO is not complete!" << std::endl;
+    } else {
+        std::cout << "FBO ready." << std::endl;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Application::renderToFbo() {
+    int w = backgroundImage->getWidth();
+    int h = backgroundImage->getHeight();
+
+    // Turn on the FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glViewport(0, 0, w, h);
+
+    // Red
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Turn off the FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, windowWidth, windowHeight);
 }

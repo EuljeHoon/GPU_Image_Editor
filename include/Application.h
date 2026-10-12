@@ -33,6 +33,12 @@ namespace csci3081 {
             TexturedRectangle* texRectangle;
             Texture* backgroundTexture;
 
+            // --- FBO test (temporary) ---
+            unsigned int fbo = 0;          // the framebuffer object
+            unsigned int fboTexture = 0;   // the texture we render into
+            void initFboTest();            // create fbo + texture (once)
+            void renderToFbo();            // draw red into the texture (each frame)
+
             void initialImage();
             void initialWindow();
             void initialShaderTexture();
