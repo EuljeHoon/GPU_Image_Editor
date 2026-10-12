@@ -218,7 +218,6 @@ void Application::initComputeShader() {
         "   float down   = texture(curr, uv + vec2(0.0,  texel.y)).r;\n"
         "\n"
         "   float next = 2.0*center - old + c*(left + right + up + down - 4.0*center);\n"
-        "   float next = 0.0; // TODO\n"
         "\n"
         "   next *= 0.995; // 감쇠\n"
         "   FragColor = next;\n"
