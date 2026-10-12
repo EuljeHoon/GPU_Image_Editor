@@ -217,9 +217,11 @@ void Application::initComputeShader() {
         "   float up     = texture(curr, uv + vec2(0.0, -texel.y)).r;\n"
         "   float down   = texture(curr, uv + vec2(0.0,  texel.y)).r;\n"
         "\n"
-        "   // DEBUG: prev(old) 텍스처만 보여주기\n"
-        "   float next = old;\n"
+        "   float lap = left + right + up + down - 4.0*center;\n"
+        "   float next = 2.0*center - old + c*lap;\n"
+        "   next *= 0.999;\n"
         "\n"
+        "   // 클릭: 그 자리를 고정 높이로 설정 (prev=curr 효과 → 속도 0에서 시작)\n"
         "   if (clickStrength > 0.0) {\n"
         "       float d = distance(uv, clickPos);\n"
         "       if (d < 0.03) { next = clickStrength; }\n"
@@ -276,7 +278,7 @@ void Application::waveStepGPU() {
     glUniform1i(computeLoc("prev"), 1);
 
     glUniform2f(computeLoc("texel"), 1.0f / w, 1.0f / h);  // 1픽셀 UV 크기
-    glUniform1f(computeLoc("c"), 0.1f);
+    glUniform1f(computeLoc("c"), 0.05f);
     glUniform2f(computeLoc("clickPos"), clickX, clickY);
     glUniform1f(computeLoc("clickStrength"), clickStrength);
 
