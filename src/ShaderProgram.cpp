@@ -34,11 +34,10 @@ ShaderProgram::ShaderProgram() {
     "       FragColor = color; \n"
     "   } \n"
     "   else { \n"
-    "       float h = color.r; \n"
-    "       float t = clamp(0.5 + h * 2.0, 0.0, 1.0); \n"
-    "       vec3 dark = vec3(0.0, 0.0, 0.1); \n"
+    "       float gray = 0.299*color.r + 0.587*color.g + 0.114*color.b; \n"
+    "       vec3 dark = vec3(0.0, 0.0, 0.0); \n"
     "       vec3 wave = vec3(0.4, 0.7, 1.0); \n"
-    "       FragColor = vec4(mix(dark, wave, t), 1.0); \n"
+    "       FragColor = vec4(mix(dark, wave, gray), 1.0); \n"
     "   } \n"
     "}\n\0";
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
