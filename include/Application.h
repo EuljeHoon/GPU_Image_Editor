@@ -33,11 +33,11 @@ namespace csci3081 {
             TexturedRectangle* texRectangle;
             Texture* backgroundTexture;
 
-            // --- FBO test (temporary) ---
-            unsigned int fbo = 0;          // the framebuffer object
-            unsigned int fboTexture = 0;   // the texture we render into
-            void initFboTest();            // create fbo + texture (once)
-            void renderToFbo();            // draw red into the texture (each frame)
+            // --- GPU wave (ping-pong) ---
+            unsigned int waveTex[2] = {0, 0};   // 두 장: 현재/다음 번갈아 (float, 높이 저장)
+            unsigned int waveFbo[2] = {0, 0};   // 각 텍스처에 그릴 때 쓰는 FBO
+            int currentIdx = 0;                 // 지금 "현재"가 몇 번인지 (0 or 1)
+            void initWaveTextures();            // 텍스처 2장 + FBO 2개 만들기 (한 번)
 
             void initialImage();
             void initialWindow();

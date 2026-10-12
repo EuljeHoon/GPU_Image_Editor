@@ -22,7 +22,7 @@ Application::Application(int width, int height) {
     initialButton();
     initialColorButton();
 
-    initFboTest();   // FBO test
+    initWaveTextures();   // ping-pong float textures + FBOs
 }
 Application::~Application() {
     delete window;
@@ -61,9 +61,6 @@ void Application::runApplication() {
         if(window->getKey(GLFW_KEY_G)) useCPU = false;
         if(window->getKey(GLFW_KEY_C)) useCPU = true;
 
-        // --- FBO TEST: Draw Red Background ---
-        renderToFbo();
-
         // -------------------------------------
         // Render Graphics
         // -------------------------------------
@@ -74,14 +71,15 @@ void Application::runApplication() {
 
         shader->runProgram();
 
-        // --- FBO TEST: Import Red background on the screen ---
+        // 현재 파동 텍스처를 화면에 띄우기
+        // (아직 파동 계산이 없어서 전부 0 → 검은 화면이 정상)
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, fboTexture);
+        glBindTexture(GL_TEXTURE_2D, waveTex[currentIdx]);
         shader->uniform1i("tex", 0);
         shader->uniform3f("scale", 1.0f, 1.0f, 1.0f);
         shader->uniform3f("offset", 0.0f, 0.0f, 0.0f);
         shader->uniform1i("highlight", false);
-        shader->uniform1i("cpuMode", true);
+        shader->uniform1i("cpuMode", true);   // 지금은 텍스처 값 그대로 출력
         texRectangle->draw();
 
         // resetButton->drawButton(*shader, *texRectangle, buttonHighlighted);
@@ -134,48 +132,39 @@ void Application::initialColorButton() {
 }
 
 // ========================================================================
-// FBO TEST (temporary) — proves we can render into a texture, not the screen
+// GPU WAVE — ping-pong float textures + FBOs
 // ========================================================================
-void Application::initFboTest() {
+void Application::initWaveTextures() {
     int w = backgroundImage->getWidth();
     int h = backgroundImage->getHeight();
 
-    // 1) Create empty texture
-    glGenTextures(1, &fboTexture);
-    glBindTexture(GL_TEXTURE_2D, fboTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    for (int i = 0; i < 2; i++) {
+        // 1) float texture (GL_R32F = 32-bit float, 1 channel → stores wave height)
+        glGenTextures(1, &waveTex[i]);
+        glBindTexture(GL_TEXTURE_2D, waveTex[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, w, h, 0, GL_RED, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    // 2) Create FBO and assingn the texture above as a target
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           GL_TEXTURE_2D, fboTexture, 0);
+        // 2) FBO targeting this texture
+        glGenFramebuffers(1, &waveFbo[i]);
+        glBindFramebuffer(GL_FRAMEBUFFER, waveFbo[i]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_2D, waveTex[i], 0);
 
-    // 3) Check FBO
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        std::cout << "ERROR: FBO is not complete!" << std::endl;
-    } else {
-        std::cout << "FBO ready." << std::endl;
+        // 3) Check status
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+            std::cout << "ERROR: wave FBO " << i << " is not complete!" << std::endl;
+        } else {
+            std::cout << "wave FBO " << i << " ready." << std::endl;
+        }
+
+        // 4) Clear texture to 0 (flat, calm surface)
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void Application::renderToFbo() {
-    int w = backgroundImage->getWidth();
-    int h = backgroundImage->getHeight();
-
-    // Turn on the FBO
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glViewport(0, 0, w, h);
-
-    // Red
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    // Turn off the FBO
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, windowWidth, windowHeight);
 }
