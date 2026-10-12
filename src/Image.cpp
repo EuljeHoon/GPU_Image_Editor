@@ -183,8 +183,8 @@ void Image::waveStep(bool useCPU) {
         for (int x = 0; x < width; x++) {
             float h = waveCurr[y * width + x];
             if (useCPU) {
-                // CPU가 직접 컬러맵 계산 (셰이더와 똑같은 검정→파랑)
-                float gray = (128.0f + h * 10.0f) / 255.0f;   // GPU의 회색값과 동일하게
+                // CPU computes the colormap directly (same black->blue as the shader)
+                float gray = (128.0f + h * 10.0f) / 255.0f;   // match the GPU gray value
                 if (gray < 0) gray = 0;
                 if (gray > 1) gray = 1;
                 int r = (int)(0.4f * 255.0f * gray);

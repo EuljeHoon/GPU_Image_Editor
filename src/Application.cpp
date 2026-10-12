@@ -47,15 +47,15 @@ void Application::runApplication() {
             lastTime = now;
         }
 
-        // ESC로 종료
+        // Quit on ESC
         if(window->getKey(GLFW_KEY_ESCAPE)) {
             glfwSetWindowShouldClose(window->newWindow(), true);
         }
-        // CPU/GPU 색칠 토글 (성능 비교용)
+        // Toggle CPU/GPU coloring (for performance comparison)
         if(window->getKey(GLFW_KEY_G)) useCPU = false;
         if(window->getKey(GLFW_KEY_C)) useCPU = true;
 
-        // CPU에서 파동 한 스텝 계산 → 결과를 GPU 텍스처로 업로드
+        // Advance the wave one step on the CPU, then upload the result to the GPU texture
         backgroundImage->waveStep(useCPU);
 
         float width = backgroundImage->getWidth();
@@ -68,7 +68,7 @@ void Application::runApplication() {
 
         shader->runProgram();
 
-        // 파동 텍스처를 화면 전체에 그림 (셰이더가 컬러맵 적용)
+        // Draw the wave texture across the whole screen (shader applies the colormap)
         backgroundTexture->bind();
         shader->uniform1i("tex", 0);
         shader->uniform3f("scale", 1.0f, 1.0f, 1.0f);
