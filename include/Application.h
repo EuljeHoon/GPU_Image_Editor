@@ -19,7 +19,8 @@ namespace csci3081 {
             bool buttonHighlighted;
             bool colorButtonHighlighted;
             bool useCPU = false;
-            Image* backgroundImage;
+            Image* imageData;
+            Image* waveData;
             Image* buttonImage;
             Image* colorButtonImage;
             Button* resetButton;
@@ -31,7 +32,8 @@ namespace csci3081 {
             Window* window;
             ShaderProgram* shader;
             TexturedRectangle* texRectangle;
-            Texture* backgroundTexture;
+            Texture* waveTexture;
+            Texture* imageTexture;
 
             void initialImage();
             void initialWindow();

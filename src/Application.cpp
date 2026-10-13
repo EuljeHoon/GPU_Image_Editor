@@ -10,7 +10,8 @@ Application::Application(int width, int height) {
     buttonPressed = false;
     buttonHighlighted = false;
     colorButtonHighlighted = false;
-    backgroundImage = nullptr;
+    imageData = nullptr;
+    waveData = nullptr;
     buttonImage = nullptr;
     resetButton = nullptr;
     colorButton = nullptr;
@@ -25,10 +26,12 @@ Application::~Application() {
     delete window;
     delete shader;
     delete texRectangle;
-    delete backgroundTexture;
+    delete waveTexture;
+    delete imageTexture;
     delete resetButton;
     delete colorButton;
-    delete backgroundImage;
+    delete imageData;
+    delete waveData;
     delete buttonImage;
 }
 void Application::runApplication() {
@@ -56,11 +59,11 @@ void Application::runApplication() {
         if(window->getKey(GLFW_KEY_C)) useCPU = true;
 
         // Advance the wave one step on the CPU, then upload the result to the GPU texture
-        backgroundImage->waveStep(useCPU);
+        waveData->waveStep(useCPU);
 
-        float width = backgroundImage->getWidth();
-        float height = backgroundImage->getHeight();
-        backgroundTexture->copyData(backgroundImage->getData(), width, height, 4);
+        float width = waveData->getWidth();
+        float height = waveData->getHeight();
+        waveTexture->copyData(waveData->getData(), width, height, 4);
 
         // Clear the screen
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -69,7 +72,7 @@ void Application::runApplication() {
         shader->runProgram();
 
         // Draw the wave texture across the whole screen (shader applies the colormap)
-        backgroundTexture->bind();
+        waveTexture->bind();
         shader->uniform1i("tex", 0);
         shader->uniform3f("scale", 1.0f, 1.0f, 1.0f);
         shader->uniform3f("offset", 0.0f, 0.0f, 0.0f);
@@ -82,14 +85,15 @@ void Application::runApplication() {
     }
 }
 void Application::initialImage() {
-    backgroundImage = new Image("img_small.jpeg");
-    backgroundImage->waveInit();
+    imageData = new Image("img_small.jpeg");
+    waveData = new Image("img_small.jpeg");
+    waveData->waveInit();
     buttonImage = new Image("reset.png");
     colorButtonImage = new Image("Color_Button.png");
 }
 void Application::initialWindow() {
-    float width = backgroundImage->getWidth();
-    float height = backgroundImage->getHeight();
+    float width = imageData->getWidth();
+    float height = imageData->getHeight();
     window = new Window(width, height);
     glfwSetWindowUserPointer(window->newWindow(), this);
     window->viewPort(width, height);
@@ -97,21 +101,22 @@ void Application::initialWindow() {
     windowHeight = height;
 }
 void Application::initialShaderTexture() {
-    float width = backgroundImage->getWidth();
-    float height = backgroundImage->getHeight();
+    float width = imageData->getWidth();
+    float height = imageData->getHeight();
     shader = new ShaderProgram();
     texRectangle = new TexturedRectangle();
-    backgroundTexture = new Texture(backgroundImage->getData(), width, height, 4);
+    imageTexture = new Texture(imageData->getData(), width, height, 4);
+    waveTexture = new Texture(waveData->getData(), width, height, 4);
 }
 void Application::initialButton() {
-    float width = backgroundImage->getWidth();
-    float height = backgroundImage->getHeight();
+    float width = imageData->getWidth();
+    float height = imageData->getHeight();
     float aspect = 1.0f * width / height;
     resetButton = new Button(buttonImage, 0.01f, 0.01f, 0.1f, 0.1f * aspect);
 }
 void Application::initialColorButton() {
-    float width = backgroundImage->getWidth();
-    float height = backgroundImage->getHeight();
+    float width = imageData->getWidth();
+    float height = imageData->getHeight();
     float aspect = 1.0f * width / height;
     colorButton = new ColorButton(colorButtonImage, 0.01f, 0.17f, 0.1f, 0.1f * aspect);
 }

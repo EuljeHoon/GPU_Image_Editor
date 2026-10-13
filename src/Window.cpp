@@ -110,9 +110,9 @@ void Window::cursor_position_callback(GLFWwindow* window, double xpos, double yp
     // If we are drawing, edit the background image
     // -------------------------------------
     if (app.draw) {
-        int imgX = x * app.backgroundImage->getWidth();
-        int imgY = y * app.backgroundImage->getHeight();
-        app.backgroundImage->waveClick(imgX, imgY);
+        int imgX = x * app.waveData->getWidth();
+        int imgY = y * app.waveData->getHeight();
+        app.waveData->waveClick(imgX, imgY);
     }
 }
 void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -143,10 +143,10 @@ void Window::mouse_button_callback(GLFWwindow* window, int button, int action, i
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
         Application& app = *static_cast<Application*>(glfwGetWindowUserPointer(window));
         if (app.buttonHighlighted) {
-            app.resetButton->handlePress(app.backgroundImage);
+            app.resetButton->handlePress(app.waveData);
         }
         else if (app.colorButtonHighlighted) {
-            app.colorButton->handlePress(app.backgroundImage);
+            app.colorButton->handlePress(app.waveData);
         }
         else {
             app.draw = true;
@@ -154,9 +154,9 @@ void Window::mouse_button_callback(GLFWwindow* window, int button, int action, i
             glfwGetCursorPos(window, &xpos, &ypos);
             float x = xpos / app.windowWidth;
             float y = ypos / app.windowHeight;
-            int imgX = x * app.backgroundImage->getWidth();
-            int imgY = y * app.backgroundImage->getHeight();
-            app.backgroundImage->waveClick(imgX, imgY);
+            int imgX = x * app.waveData->getWidth();
+            int imgY = y * app.waveData->getHeight();
+            app.waveData->waveClick(imgX, imgY);
         }
     }
     if (action == GLFW_RELEASE) {
