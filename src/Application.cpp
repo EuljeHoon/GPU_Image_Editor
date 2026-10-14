@@ -64,6 +64,7 @@ void Application::runApplication() {
         float width = waveData->getWidth();
         float height = waveData->getHeight();
         waveTexture->copyData(waveData->getData(), width, height, 4);
+        imageTexture->copyData(imageData->getData(), imageData->getWidth(), imageData->getHeight(), 4);
 
         // Clear the screen
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -71,15 +72,14 @@ void Application::runApplication() {
 
         shader->runProgram();
 
-        // Draw the wave texture across the whole screen (shader applies the colormap)
-        // TEST: swap units — image on 1, wave on 0
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, imageTexture->getTexture());
-        shader->uniform1i("imageTex", 1);
-
+        // Draw: image on unit 0, wave on unit 1
         glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, imageTexture->getTexture());
+        shader->uniform1i("imageTex", 0);
+
+        glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, waveTexture->getTexture());
-        shader->uniform1i("waveTex", 0);
+        shader->uniform1i("waveTex", 1);
 
         shader->uniform3f("scale", 1.0f, 1.0f, 1.0f);
         shader->uniform3f("offset", 0.0f, 0.0f, 0.0f);
