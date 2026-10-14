@@ -72,12 +72,18 @@ void Application::runApplication() {
         shader->runProgram();
 
         // Draw the wave texture across the whole screen (shader applies the colormap)
-        waveTexture->bind();
-        shader->uniform1i("tex", 0);
+        glActiveTexture(GL_TEXTURE0);
+        imageTexture->bind();
+        shader->uniform1i("imageTex", 0);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, waveTexture->getTexture());
+        shader->uniform1i("waveTex", 1);
+
         shader->uniform3f("scale", 1.0f, 1.0f, 1.0f);
         shader->uniform3f("offset", 0.0f, 0.0f, 0.0f);
         shader->uniform1i("highlight", false);
-        shader->uniform1i("cpuMode", useCPU);
+        shader->uniform1i("cpuMode", false);
         texRectangle->draw();
 
         window->swapBuffers();
