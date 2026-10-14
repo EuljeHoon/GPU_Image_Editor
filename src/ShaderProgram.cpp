@@ -41,7 +41,7 @@ ShaderProgram::ShaderProgram() {
     // "       FragColor = vec4(bg * (1.0 + wave * 0.5), 1.0); \n"
     // "   } \n"
     "   else { \n"
-    "       FragColor = texture(imageTex, interpCoord); \n"   // 사진만! 파동 무시
+    "       FragColor = vec4(1.0, 0.0, 0.0, 1.0); \n"   // 사진만! 파동 무시
     "   } \n"
     "}\n\0";
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
