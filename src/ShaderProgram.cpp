@@ -34,11 +34,14 @@ ShaderProgram::ShaderProgram() {
     "   else if (cpuMode) { \n"
     "       FragColor = color; \n"
     "   } \n"
+    // "   else { \n"
+    // "       vec3 bg = texture(imageTex, interpCoord).rgb; \n"
+    // "       float h = texture(waveTex, interpCoord).r; \n"
+    // "       float wave = (h * 2.0) - 1.0; \n"
+    // "       FragColor = vec4(bg * (1.0 + wave * 0.5), 1.0); \n"
+    // "   } \n"
     "   else { \n"
-    "       vec3 bg = texture(imageTex, interpCoord).rgb; \n"
-    "       float h = texture(waveTex, interpCoord).r; \n"
-    "       float wave = (h * 2.0) - 1.0; \n"
-    "       FragColor = vec4(bg * (1.0 + wave * 0.5), 1.0); \n"
+    "       FragColor = texture(imageTex, interpCoord); \n"   // 사진만! 파동 무시
     "   } \n"
     "}\n\0";
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
