@@ -73,7 +73,8 @@ void Application::runApplication() {
 
         // Draw the wave texture across the whole screen (shader applies the colormap)
         glActiveTexture(GL_TEXTURE0);
-        imageTexture->bind();
+        // imageTexture->bind();
+        glBindTexture(GL_TEXTURE_2D, imageTexture->getTexture());
         shader->uniform1i("imageTex", 0);
 
         glActiveTexture(GL_TEXTURE1);
