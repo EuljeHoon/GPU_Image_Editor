@@ -166,7 +166,15 @@ void Image::waveStep(bool useCPU) {
             int up = (y - 1) * width + x;
             int down = (y + 1) * width + x;
 
-            waveNext[i] = 2.0f * waveCurr[i] - wavePrev[i]
+            /**
+            waveNext =
+            waveCurr + (waveCurr - wavePrev) <- Keeping direction
+            + waveSpeed * ((left - waveCurr) + (right - waveCurr)
+            + (up - waveCurr) + (down - waveCurr)) <- preserving the height
+
+            waveNext *= 0.995f <- Make weaker and weaker
+             */
+            waveNext[i] = 2.0f * waveCurr[i] - wavePrev[i] // WaveCurr + (WaveCurr - wavePrev)
                         + c * (waveCurr[left] + waveCurr[right] 
                             + waveCurr[up] + waveCurr[down] 
                             - 4.0f * waveCurr[i]);
